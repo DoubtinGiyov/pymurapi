@@ -3,6 +3,7 @@ from pymurapi import simulator
 from pymurapi import auv
 from pymurapi.usv import Usv
 from enum import Enum
+import os.path
 
 _mur_object = None
 AUV = "AUV"
@@ -13,15 +14,15 @@ def auv_init():
     import sys
     global _mur_object
     if _mur_object is None:
-        if sys.platform == 'win32':
-            sim = simulator.Simulator()
-            sim.prepare()
-            _mur_object = sim
-            return _mur_object
-        else:
+        if os.path.exists("etc/mur/config.ini"):
             sub = auv.Auv()
             sub.prepare()
             _mur_object = sub
+            return _mur_object
+        else:
+            sim = simulator.Simulator()
+            sim.prepare()
+            _mur_object = sim
             return _mur_object
     else:
         return _mur_object
